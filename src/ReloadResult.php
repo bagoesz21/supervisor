@@ -9,11 +9,11 @@ namespace Supervisor;
  */
 final class ReloadResult implements ReloadResultInterface
 {
-    public function __construct(
-        private readonly array $added = [],
-        private readonly array $modified = [],
-        private readonly array $removed = []
-    ) {}
+    private array $added = [];
+    private array $modified = [];
+    private array $removed = [];
+
+    public function __construct() {}
 
     /**
      * @inheritDoc

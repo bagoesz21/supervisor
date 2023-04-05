@@ -84,12 +84,13 @@ interface SupervisorInterface
     /**
      * Get the supervisord service state.
      */
-    public function getServiceState(): ServiceStates;
+    public function getServiceState(): int;
 
     /**
      * Checks if supervisord is in given state.
+     * @param int $checkState
      */
-    public function checkState(int|ServiceStates $checkState): bool;
+    public function checkState($checkState): bool;
 
     /**
      * Returns all processes as Process objects.

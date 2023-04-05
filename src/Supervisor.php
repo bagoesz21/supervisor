@@ -6,7 +6,6 @@ use fXmlRpc\ClientInterface;
 use fXmlRpc\Exception\FaultException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Supervisor\Exception\ReloadExceptions;
 use Supervisor\Exception\SupervisorException;
 
 /**
@@ -48,12 +47,21 @@ use Supervisor\Exception\SupervisorException;
  */
 final class Supervisor implements SupervisorInterface
 {
-    private readonly LoggerInterface $logger;
+    /**
+     * Service states.
+     */
+    public const SHUTDOWN = -1;
+    public const RESTARTING = 0;
+    public const RUNNING = 1;
+    public const FATAL = 2;
 
-    public function __construct(
-        private readonly ClientInterface $client,
-        ?LoggerInterface $logger = null
-    ) {
+    private ClientInterface $client;
+
+    private LoggerInterface $logger;
+
+    public function __construct(ClientInterface $client, ?LoggerInterface $logger = null)
+    {
+        $this->client = $client;
         $this->logger = $logger ?? new NullLogger();
     }
 
@@ -109,26 +117,22 @@ final class Supervisor implements SupervisorInterface
      */
     public function isRunning(): bool
     {
-        return $this->checkState(ServiceStates::Running);
+        return $this->checkState(self::RUNNING);
     }
 
     /**
      * @inheritDoc
      */
-    public function getServiceState(): ServiceStates
+    public function getServiceState(): int
     {
-        return ServiceStates::from($this->getState()['statecode']);
+        return $this->getState()['statecode'];
     }
 
     /**
      * @inheritDoc
      */
-    public function checkState(int|ServiceStates $checkState): bool
+    public function checkState($checkState): bool
     {
-        if (is_int($checkState)) {
-            $checkState = ServiceStates::tryFrom($checkState);
-        }
-
         return $this->getServiceState() === $checkState;
     }
 

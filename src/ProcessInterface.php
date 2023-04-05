@@ -28,12 +28,13 @@ interface ProcessInterface extends \ArrayAccess
     /**
      * Checks whether the process is running.
      */
-    public function getState(): ProcessStates;
+    public function getState(): int;
 
     /**
      * Checks if process is in the given state.
+     * @param int
      */
-    public function checkState(int|ProcessStates $state): bool;
+    public function checkState($state): bool;
 
     /**
      * Returns process name.
