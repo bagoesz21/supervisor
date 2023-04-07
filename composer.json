@@ -22,8 +22,6 @@
             "Supervisor\\": "src/"
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require": {
         "php": "^7.3|^8.0",
         "lstrojny/fxmlrpc": ">=0.12",
